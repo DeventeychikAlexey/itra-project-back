@@ -2,6 +2,7 @@ const { dbQueries } = require("../lib");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const { config } = require("../config");
 
 function findRegisterErrors({ login, password, password2, name }) {
   let errors = [];
@@ -25,6 +26,10 @@ function encryptPassword(password) {
 const authController = {
   async register({ body }, res) {
     try {
+      let user = await dbQueries.getOne("users", {
+        login: body.login,
+      });
+      if (user) res.status(400).send({ msg: "User already exists!" });
       const errors = findRegisterErrors(body);
       if (errors.length > 0) res.status(400).send({ errors });
       const hash = encryptPassword(body.password);
@@ -32,7 +37,7 @@ const authController = {
         login: body.login,
         password: hash,
         name: body.name,
-        id_right: 2,
+        id_right: config.user,
       });
       res.status(200).send({ msg: result });
     } catch (error) {
@@ -41,13 +46,9 @@ const authController = {
   },
   async login({ user }, res) {
     try {
-      const token = jwt.sign(
-        { id: user.id, name: user.name, right_name: user.right_name },
-        process.env.SECRET_KEY,
-        {
-          expiresIn: "24h",
-        }
-      );
+      const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
+        expiresIn: "24h",
+      });
       res.status(200).send({ msg: token });
     } catch (error) {
       res.status(400).send({ msg: error.message });

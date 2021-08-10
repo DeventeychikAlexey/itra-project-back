@@ -1,4 +1,5 @@
-const { dbQueries } = require("../lib");
+const { dbQueries, utils } = require("../lib");
+const { config } = require("../config");
 
 async function changeRights(id, from, to) {
   const user = await dbQueries.getOne("users", { id });
@@ -8,17 +9,39 @@ async function changeRights(id, from, to) {
 }
 
 const developerController = {
-  async upgradeUser({ body }, res) {
+  async upgradeUser({ params }, res) {
     try {
-      const result = await changeRights(body.id, 2, 1);
+      const result = await changeRights(params.id, config.user, config.admin);
       res.status(200).send({ msg: result });
     } catch (error) {
       res.status(400).send({ msg: error.message });
     }
   },
-  async downgradeUser({ body }, res) {
+  async downgradeUser({ params }, res) {
     try {
-      const result = await changeRights(body.id, 1, 2);
+      const result = await changeRights(params.id, config.admin, config.user);
+      res.status(200).send({ msg: result });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
+  async toggleBlockedUser({ params }, res) {
+    try {
+      const result = await utils.toggleBlocked(params.id, [
+        config.user,
+        config.admin,
+      ]);
+      res.status(200).send({ msg: result });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
+  async deleteUser({ params }, res) {
+    try {
+      const result = await utils.deleteUser(params.id, [
+        config.user,
+        config.admin,
+      ]);
       res.status(200).send({ msg: result });
     } catch (error) {
       res.status(400).send({ msg: error.message });

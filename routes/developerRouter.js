@@ -5,17 +5,31 @@ const { developerMiddleware } = require("../middlewares");
 const { developerController } = require("../controllers");
 
 router.put(
-  "/upgradeUser",
+  "/upgradeUser/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
   developerMiddleware,
   developerController.upgradeUser
 );
 
 router.put(
-  "/downgradeUser",
+  "/downgradeUser/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
   developerMiddleware,
   developerController.downgradeUser
+);
+
+router.put(
+  "/toggleBlocked/:id",
+  passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
+  developerMiddleware,
+  developerController.toggleBlockedUser
+);
+
+router.delete(
+  "/deleteUser/:id",
+  passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
+  developerMiddleware,
+  developerController.deleteUser
 );
 
 module.exports = router;
