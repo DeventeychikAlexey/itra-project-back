@@ -42,7 +42,7 @@ const authController = {
   async login({ user }, res) {
     try {
       const token = jwt.sign(
-        { id: user.id, name: user.name },
+        { id: user.id, name: user.name, right_name: user.right_name },
         process.env.SECRET_KEY,
         {
           expiresIn: "24h",

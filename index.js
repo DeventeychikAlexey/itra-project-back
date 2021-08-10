@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(passport.initialize());
 
 routes.forEach((route) => {
-  app.use(route.path, ...route.middlewares, route.router);
+  app.use(route.path, route.router);
 });
 
 app.listen(PORT, () =>

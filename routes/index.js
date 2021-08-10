@@ -1,9 +1,9 @@
 const authRouter = require("./authRouter");
 const pageRouter = require("./pageRouter");
-
-const middleware = (_, __, next) => next();
+const developerRouter = require("./developerRouter");
 
 module.exports = [
-  { router: authRouter, middlewares: [middleware], path: "/auth" },
-  { router: pageRouter, middlewares: [middleware], path: "/" },
+  { router: authRouter, path: "/auth" },
+  { router: pageRouter, path: "/" },
+  { router: developerRouter, path: "/developer" },
 ];

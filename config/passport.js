@@ -23,7 +23,7 @@ const localStrategyOptions = {
 
 const localVerifyCallback = async (login, password, done) => {
   try {
-    const user = await dbQueries.getOne("users", {
+    const user = await dbQueries.getOne("users_rights_view", {
       login: login,
     });
     const error = getLoginError(user, password);
@@ -45,7 +45,7 @@ const jwtStrategyOptions = {
 
 const jwtVerifyCallback = async (jwtPayload, done) => {
   try {
-    const user = await dbQueries.getOne("users", {
+    const user = await dbQueries.getOne("users_rights_view", {
       id: jwtPayload.id,
     });
     if (!user) return done(null, false);

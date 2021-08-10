@@ -1,2 +1,4 @@
 const authController = require("./authController");
-module.exports = { authController };
+const developerController = require("./developerController");
+
+module.exports = { authController, developerController };
