@@ -1,8 +1,8 @@
 const Router = require("express").Router;
 const router = new Router();
+const { baseController } = require("../controllers");
 
-router.get("/", (req, res, next) => {
-  res.status(200).send();
-});
+router.get("/collections", baseController.getCollections);
+router.get("/items", baseController.getItems);
 
 module.exports = router;
