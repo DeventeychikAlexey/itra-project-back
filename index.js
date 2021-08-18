@@ -3,7 +3,7 @@ const express = require("express");
 const routes = require("./routes");
 const passport = require("passport");
 require("./config/passport.js");
-
+const { sequelize } = require("./db");
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -17,6 +17,14 @@ routes.forEach((route) => {
   app.use(route.path, route.router);
 });
 
-app.listen(PORT, () =>
-  console.log(`Server is running on http://localhost:${PORT}`)
-);
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+    app.listen(PORT, () =>
+      console.log(`Server is running on http://localhost:${PORT}`)
+    );
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+})();

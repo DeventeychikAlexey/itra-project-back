@@ -26,7 +26,7 @@ router.put(
 );
 
 router.delete(
-  "/delete/user/:id",
+  "/user/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
   developerMiddleware,
   developerController.deleteUser

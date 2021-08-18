@@ -1,19 +1,18 @@
-const { dbQueries } = require("../lib");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
-const { config } = require("../config");
+const config = require("../config/config");
+const { users } = require("../db");
 
 function findRegisterErrors({ login, password, password2, name }) {
   let errors = [];
-  if (validator.isEmpty(name)) errors.push({ msg: "Name is required!" });
-  if (!validator.isEmail(login)) errors.push({ msg: "Email is not valid!" });
-  if (validator.isEmpty(password))
-    errors.push({ msg: "Password is required!" });
+  if (validator.isEmpty(name)) errors.push("Name is required!");
+  if (!validator.isEmail(login)) errors.push("Email is not valid!");
+  if (validator.isEmpty(password)) errors.push("Password is required!");
   if (!validator.isLength(password, { min: 6, max: 32 }))
-    errors.push({ msg: "password length has to be between 6 and 32!" });
+    errors.push("password length has to be between 6 and 32!");
   if (password != password2 || password.length != password2.length)
-    errors.push({ msg: "Passwords do not equal!" });
+    errors.push("Passwords do not equal!");
   return errors;
 }
 
@@ -26,14 +25,12 @@ function encryptPassword(password) {
 const authController = {
   async register({ body }, res) {
     try {
-      let user = await dbQueries.getOne("users", {
-        login: body.login,
-      });
-      if (user) res.status(400).send({ msg: "User already exists!" });
+      let user = await users.findOne({ where: { login: body.login } });
+      if (user) throw new Error("User already exists!");
       const errors = findRegisterErrors(body);
-      if (errors.length > 0) res.status(400).send({ errors });
+      if (errors.length > 0) throw new Error(errors);
       const hash = encryptPassword(body.password);
-      const result = await dbQueries.insertOne("users", {
+      const result = await users.create({
         login: body.login,
         password: hash,
         name: body.name,

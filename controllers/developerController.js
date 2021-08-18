@@ -1,11 +1,13 @@
-const { dbQueries, utils } = require("../lib");
-const { config } = require("../config");
+const { utils } = require("../lib");
+const config = require("../config/config");
+const { users } = require("../db");
 
 async function changeRights(id, from, to) {
-  const user = await dbQueries.getOne("users", { id });
+  const user = await users.findOne({ where: { id } });
   if (!user) throw new Error("No one is found");
-  if (user.id_right != from) throw new Error("You can not change his rights");
-  return await dbQueries.updateOne("users", { id_right: to }, { id });
+  if (user.dataValues.id_right != from)
+    throw new Error("You can not change his rights");
+  return await users.update({ id_right: to }, { where: { id } });
 }
 
 const developerController = {

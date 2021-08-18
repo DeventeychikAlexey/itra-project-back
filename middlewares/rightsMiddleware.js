@@ -1,11 +1,16 @@
+const config = require("../config/config");
+
 const developerMiddleware = (req, res, next) => {
-  if (req.user.right_name != "developer")
+  if (req.user.id_right != config.developer)
     res.status(400).send("You do not have enough permissions!");
   next();
 };
 
 const adminMiddleware = (req, res, next) => {
-  if (req.user.right_name != "admin" && req.user.right_name != "developer")
+  if (
+    req.user.id_right != config.admin &&
+    req.user.id_right != config.developer
+  )
     res.status(400).send("You do not have enough permissions!");
   next();
 };

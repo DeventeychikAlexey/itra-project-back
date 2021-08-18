@@ -9,10 +9,10 @@ router.post(
   userController.createCollection
 );
 
-router.get(
-  "/collections",
-  passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
-  userController.getCollections
-);
+// router.get(
+//   "/collections",
+//   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
+//   userController.getCollections
+// );
 
 module.exports = router;

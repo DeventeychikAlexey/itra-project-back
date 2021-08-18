@@ -5,8 +5,10 @@ const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
-const { dbQueries } = require("../lib");
 const bcrypt = require("bcrypt");
+
+const config = require("./config");
+const { users } = require("../db");
 
 //Local strategy
 
@@ -23,10 +25,8 @@ const localStrategyOptions = {
 
 const localVerifyCallback = async (login, password, done) => {
   try {
-    const user = await dbQueries.getOne("users_rights_view", {
-      login: login,
-    });
-    const error = getLoginError(user, password);
+    const user = await users.findOne({ where: { login: login } });
+    const error = getLoginError(user?.dataValues, password);
     if (error) return done(error, false);
     return done(null, user);
   } catch (err) {
@@ -45,9 +45,7 @@ const jwtStrategyOptions = {
 
 const jwtVerifyCallback = async (jwtPayload, done) => {
   try {
-    const user = await dbQueries.getOne("users_rights_view", {
-      id: jwtPayload.id,
-    });
+    const user = await users.findOne({ where: { id: jwtPayload.id } });
     if (!user) return done(null, false);
     return done(null, user);
   } catch (err) {
@@ -73,17 +71,13 @@ const googleVerifyCallback = async (
 ) => {
   try {
     if (!profile) return done(null, false);
-    let user = await dbQueries.getOne("users", {
-      id_google: profile.id,
-    });
+    console.log(profile.id);
+    let user = await users.findOne({ where: { id_google: profile.id } });
     if (!user) {
-      await dbQueries.insertOne("users", {
+      user = await users.create({
         id_google: profile.id,
         name: profile.displayName,
-        id_right: 2,
-      });
-      user = await dbQueries.getOne("users", {
-        id_google: profile.id,
+        id_right: config.user,
       });
     }
     return done(null, user);
