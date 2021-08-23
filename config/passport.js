@@ -14,7 +14,7 @@ const { users } = require("../db");
 
 function getLoginError(user, password) {
   if (!user || !bcrypt.compareSync(password, user.password))
-    return { msg: "Login or password is wrong!" };
+    return "Login or password is wrong!";
   return null;
 }
 
@@ -27,7 +27,7 @@ const localVerifyCallback = async (login, password, done) => {
   try {
     const user = await users.findOne({ where: { login: login } });
     const error = getLoginError(user?.dataValues, password);
-    if (error) return done(error, false);
+    if (error) throw new Error(error);
     return done(null, user);
   } catch (err) {
     return done(err, false);
@@ -46,6 +46,7 @@ const jwtStrategyOptions = {
 const jwtVerifyCallback = async (jwtPayload, done) => {
   try {
     const user = await users.findOne({ where: { id: jwtPayload.id } });
+    console.log(user);
     if (!user) return done(null, false);
     return done(null, user);
   } catch (err) {

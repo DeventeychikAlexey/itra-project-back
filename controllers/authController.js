@@ -2,7 +2,8 @@ const bcrypt = require("bcrypt");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
-const { users } = require("../db");
+const { users, rights } = require("../db");
+const { utils } = require("../lib");
 
 function findRegisterErrors({ login, password, password2, name }) {
   let errors = [];
@@ -43,10 +44,24 @@ const authController = {
   },
   async login({ user }, res) {
     try {
+      if (user.blocked) throw new Error("User is blocked!");
       const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
         expiresIn: "24h",
       });
       res.status(200).send({ msg: token });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
+  async auth({ user }, res) {
+    try {
+      let result = await users.findOne({ where: { id: user.id } });
+      if (result.dataValues.blocked) throw new Error("User is blocked!");
+      const allRights = await rights.findAll();
+      result = utils.getUserAndRight(result, allRights);
+      delete result.dataValues.login;
+      delete result.dataValues.password;
+      res.status(200).send({ msg: result });
     } catch (error) {
       res.status(400).send({ msg: error.message });
     }

@@ -18,6 +18,13 @@ router.delete(
   adminController.deleteUser
 );
 
+router.delete(
+  "/collection/:id",
+  passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
+  adminMiddleware,
+  adminController.deleteCollection
+);
+
 router.post(
   "/collection/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),

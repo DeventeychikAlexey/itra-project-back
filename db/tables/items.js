@@ -23,6 +23,14 @@ module.exports = function (sequelize) {
         },
         onDelete: "cascade",
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
     },
     {
       timeStamps: true,

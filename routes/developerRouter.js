@@ -32,4 +32,11 @@ router.delete(
   developerController.deleteUser
 );
 
+router.delete(
+  "/collection/:id",
+  passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
+  developerMiddleware,
+  developerController.deleteCollection
+);
+
 module.exports = router;

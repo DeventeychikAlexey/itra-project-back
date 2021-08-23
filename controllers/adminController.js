@@ -19,6 +19,14 @@ const adminController = {
       res.status(400).send({ msg: error.message });
     }
   },
+  async deleteCollection({ params }, res) {
+    try {
+      const result = await utils.deleteCollection(params.id, [config.user]);
+      res.status(200).send({ msg: result });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
   async createCollection({ body, params }, res) {
     try {
       const result = await collections.create({

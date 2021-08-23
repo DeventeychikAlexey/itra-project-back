@@ -49,6 +49,17 @@ const developerController = {
       res.status(400).send({ msg: error.message });
     }
   },
+  async deleteCollection({ params }, res) {
+    try {
+      const result = await utils.deleteCollection(params.id, [
+        config.user,
+        config.admin,
+      ]);
+      res.status(200).send({ msg: result });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
 };
 
 module.exports = developerController;

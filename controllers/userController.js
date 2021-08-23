@@ -15,6 +15,15 @@ const userController = {
       res.status(400).send({ msg: error.message });
     }
   },
+  async upload({ file }, res) {
+    try {
+      console.log(file);
+      res.status(200).send({ msg: null });
+    } catch (error) {
+      console.log(error);
+      res.status(400).send({ msg: error });
+    }
+  },
 };
 
 module.exports = userController;

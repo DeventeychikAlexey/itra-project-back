@@ -11,6 +11,12 @@ router.post(
 
 router.post("/register", authController.register);
 
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
+  authController.auth
+);
+
 router.get(
   "/google",
   passport.authenticate("google", {
