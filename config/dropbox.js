@@ -10,9 +10,11 @@ const dbx = new Dropbox({
 
 const storage = multerDbx(dbx, {
   path: function (req, file, cb) {
-    cb(null, "/images/" + Date.now() + file.originalname);
+    file.originalname = `${Date.now()}-${file.originalname}`;
+    cb(null, "/images/" + file.originalname);
   },
   mute: true,
 });
+const upload = multer({ storage: storage });
 
-module.exports = multer({ storage });
+module.exports = { upload, dbx };

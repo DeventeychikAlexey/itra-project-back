@@ -8,15 +8,12 @@ router.post(
   passport.authenticate("local", { session: false }),
   authController.login
 );
-
 router.post("/register", authController.register);
-
 router.post(
   "/",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
   authController.auth
 );
-
 router.get(
   "/google",
   passport.authenticate("google", {
@@ -24,11 +21,11 @@ router.get(
     session: false,
   })
 );
-
 router.get(
   "/google/callback",
   passport.authenticate("google", {
     session: false,
+    failureRedirect: "/login",
   }),
   authController.login
 );

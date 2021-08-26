@@ -30,6 +30,12 @@ module.exports = function (sequelize) {
       image: {
         type: Sequelize.TEXT,
       },
+      createdAt: {
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+      },
       id_user: {
         type: Sequelize.INTEGER,
         allowNull: false,

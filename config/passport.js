@@ -46,7 +46,6 @@ const jwtStrategyOptions = {
 const jwtVerifyCallback = async (jwtPayload, done) => {
   try {
     const user = await users.findOne({ where: { id: jwtPayload.id } });
-    console.log(user);
     if (!user) return done(null, false);
     return done(null, user);
   } catch (err) {
@@ -72,7 +71,6 @@ const googleVerifyCallback = async (
 ) => {
   try {
     if (!profile) return done(null, false);
-    console.log(profile.id);
     let user = await users.findOne({ where: { id_google: profile.id } });
     if (!user) {
       user = await users.create({

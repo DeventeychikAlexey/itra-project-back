@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
-const { users, rights } = require("../db");
+const { users } = require("../db");
 const { utils } = require("../lib");
 
 function findRegisterErrors({ login, password, password2, name }) {
@@ -16,7 +16,6 @@ function findRegisterErrors({ login, password, password2, name }) {
     errors.push("Passwords do not equal!");
   return errors;
 }
-
 function encryptPassword(password) {
   const salt = bcrypt.genSaltSync();
   const hash = bcrypt.hashSync(password, salt);
@@ -55,12 +54,8 @@ const authController = {
   },
   async auth({ user }, res) {
     try {
-      let result = await users.findOne({ where: { id: user.id } });
-      if (result.dataValues.blocked) throw new Error("User is blocked!");
-      const allRights = await rights.findAll();
-      result = utils.getUserAndRight(result, allRights);
-      delete result.dataValues.login;
-      delete result.dataValues.password;
+      const result = (await utils.findUsers({ id: user.id }))[0];
+      if (result.blocked) throw new Error("User is blocked!");
       res.status(200).send({ msg: result });
     } catch (error) {
       res.status(400).send({ msg: error.message });

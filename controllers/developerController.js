@@ -11,6 +11,7 @@ async function changeRights(id, from, to) {
 }
 
 const developerController = {
+  // Users
   async upgradeUser({ params }, res) {
     try {
       const result = await changeRights(params.id, config.user, config.admin);
@@ -41,17 +42,6 @@ const developerController = {
   async deleteUser({ params }, res) {
     try {
       const result = await utils.deleteUser(params.id, [
-        config.user,
-        config.admin,
-      ]);
-      res.status(200).send({ msg: result });
-    } catch (error) {
-      res.status(400).send({ msg: error.message });
-    }
-  },
-  async deleteCollection({ params }, res) {
-    try {
-      const result = await utils.deleteCollection(params.id, [
         config.user,
         config.admin,
       ]);

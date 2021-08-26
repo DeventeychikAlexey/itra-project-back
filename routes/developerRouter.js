@@ -4,39 +4,30 @@ const passport = require("passport");
 const { developerMiddleware } = require("../middlewares");
 const { developerController } = require("../controllers");
 
+// Users
 router.put(
   "/upgradeUser/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
   developerMiddleware,
   developerController.upgradeUser
 );
-
 router.put(
   "/downgradeUser/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
   developerMiddleware,
   developerController.downgradeUser
 );
-
 router.put(
   "/toggleBlocked/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
   developerMiddleware,
   developerController.toggleBlockedUser
 );
-
 router.delete(
   "/user/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
   developerMiddleware,
   developerController.deleteUser
-);
-
-router.delete(
-  "/collection/:id",
-  passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
-  developerMiddleware,
-  developerController.deleteCollection
 );
 
 module.exports = router;

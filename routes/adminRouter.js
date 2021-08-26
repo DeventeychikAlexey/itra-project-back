@@ -4,6 +4,13 @@ const passport = require("passport");
 const { adminMiddleware } = require("../middlewares");
 const { adminController } = require("../controllers");
 
+// Users
+router.delete(
+  "/user/:id",
+  passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
+  adminMiddleware,
+  adminController.deleteUser
+);
 router.put(
   "/toggleBlocked/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
@@ -11,25 +18,31 @@ router.put(
   adminController.toggleBlockedUser
 );
 
-router.delete(
-  "/user/:id",
+// Collections
+router.put(
+  "/collection/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
-  adminMiddleware,
-  adminController.deleteUser
+  adminController.updateCollection
 );
-
 router.delete(
   "/collection/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
   adminMiddleware,
   adminController.deleteCollection
 );
-
 router.post(
   "/collection/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
   adminMiddleware,
   adminController.createCollection
+);
+
+// Items
+router.post(
+  "/item/:id",
+  passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
+  adminMiddleware,
+  adminController.createItem
 );
 
 module.exports = router;

@@ -12,11 +12,9 @@ module.exports = function (sequelize) {
       },
       title: {
         type: Sequelize.TEXT,
-        allowNull: false,
       },
       value: {
         type: Sequelize.DATE,
-        allowNull: false,
       },
       id_item: {
         type: Sequelize.INTEGER,

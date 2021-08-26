@@ -1,10 +1,13 @@
 require("dotenv").config();
+require("./config/passport.js");
+
 const express = require("express");
 const cors = require("cors");
-const routes = require("./routes");
 const passport = require("passport");
-require("./config/passport.js");
+
 const { sequelize } = require("./db");
+const routes = require("./routes");
+
 const PORT = process.env.PORT || 3000;
 
 const app = express();

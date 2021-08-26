@@ -1,20 +1,41 @@
-const { collections, tags, topics, users, rights, items } = require("../db");
+const {
+  tags,
+  topics,
+  users,
+  rights,
+  items,
+  likesUsersItems,
+} = require("../db");
 
 const { utils } = require("../lib");
 
 const baseController = {
+  // Users
+  async getUsers({}, res) {
+    try {
+      const result = await utils.findUsers();
+      res.status(200).send({
+        msg: result,
+      });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
+  async getUser({ params }, res) {
+    try {
+      const result = await utils.findUsers({ id: params.id });
+      res.status(200).send({
+        msg: result[0],
+      });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
+
   // Collections
   async getCollections({}, res) {
     try {
-      const result = await collections.findAll();
-      for (let i = 0; i < result.length; i++) {
-        const itemsCount = (
-          await items.findAll({
-            where: { id_collection: result[i].dataValues.id },
-          })
-        ).length;
-        result[i].dataValues.countItems = itemsCount;
-      }
+      const result = await utils.findCollections();
       res.status(200).send({ msg: result });
     } catch (error) {
       res.status(400).send({ msg: error.message });
@@ -22,17 +43,7 @@ const baseController = {
   },
   async getUserCollections({ params }, res) {
     try {
-      const result = await collections.findAll({
-        where: { id_user: params.userId },
-      });
-      for (let i = 0; i < result.length; i++) {
-        const itemsCount = (
-          await items.findAll({
-            where: { id_collection: result[i].dataValues.id },
-          })
-        ).length;
-        result[i].dataValues.countItems = itemsCount;
-      }
+      const result = await utils.findCollections({ id_user: params.userId });
       res.status(200).send({ msg: result });
     } catch (error) {
       res.status(400).send({ msg: error.message });
@@ -40,20 +51,25 @@ const baseController = {
   },
   async getCollection({ params }, res) {
     try {
-      const result = await collections.findOne({
-        where: { id: params.id },
-      });
-      const itemsCount = (
-        await items.findAll({
-          where: { id_collection: result.dataValues.id },
-        })
-      ).length;
-      result.dataValues.countItems = itemsCount;
-      res.status(200).send({ msg: result });
+      const result = await utils.findCollections({ id: params.id });
+      res.status(200).send({ msg: result[0] });
     } catch (error) {
       res.status(400).send({ msg: error.message });
     }
   },
+  async countCollectionItems({ params }, res) {
+    try {
+      const collectionItems = await items.findAll({
+        where: { id_collection: params.id },
+      });
+      res.status(200).send({
+        msg: collectionItems.length,
+      });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
+
   // Items
   async getItems({}, res) {
     try {
@@ -77,39 +93,18 @@ const baseController = {
       res.status(400).send({ msg: error.message });
     }
   },
-  // Users
-  async getUsers({}, res) {
+  async countItemLikes({ params }, res) {
     try {
-      let result = await users.findAll();
-      const allRights = await rights.findAll();
-      result.forEach((el) => {
-        el = utils.getUserAndRight(el, allRights);
-        delete el.dataValues.login;
-        delete el.dataValues.password;
-      });
+      const likes = await likesUsersItems.findAll();
+      const itemLikes = likes.filter((like) => like.id_item == params.id);
       res.status(200).send({
-        msg: result,
+        msg: itemLikes.length,
       });
     } catch (error) {
       res.status(400).send({ msg: error.message });
     }
   },
-  async getUser({ params }, res) {
-    try {
-      let user = await users.findOne({ where: { id: params.id } });
-      const allRights = await rights.findAll();
-      if (user) {
-        user = utils.getUserAndRight(user, allRights);
-        delete user.dataValues.login;
-        delete user.dataValues.password;
-      }
-      res.status(200).send({
-        msg: user,
-      });
-    } catch (error) {
-      res.status(400).send({ msg: error.message });
-    }
-  },
+
   // Tags
   async getTags({}, res) {
     try {
@@ -128,6 +123,19 @@ const baseController = {
       res.status(200).send({
         msg: result,
       });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
+
+  // Images
+  async downloadImage({ params }, res) {
+    try {
+      const result = await utils.downloadImage(params.collectionId);
+      const image = `data:image/jpeg;base64,${Buffer.from(
+        result.fileBinary
+      ).toString("base64")}`;
+      res.status(200).send({ msg: image });
     } catch (error) {
       res.status(400).send({ msg: error.message });
     }
