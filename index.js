@@ -19,16 +19,14 @@ app.use(express.json());
 app.use(passport.initialize());
 
 routes.forEach((route) => {
-  app.use(route.path, route.router);
+  app.use("/back" + route.path, route.router);
 });
 
 (async () => {
   try {
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
-    app.listen(PORT, () =>
-      console.log(`Server is running on http://localhost:${PORT}`)
-    );
+    app.listen(PORT, () => console.log(`Server is running on ${PORT}`));
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }
