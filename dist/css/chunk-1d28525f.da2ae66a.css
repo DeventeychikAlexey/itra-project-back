@@ -1,0 +1,1 @@
+table{max-width:100%}table,tbody,thead{display:block;overflow:auto}tbody,thead{max-height:40vh;max-width:100vw}tr{cursor:pointer;display:flex;justify-content:space-between;width:100%}td,th{flex:12% 1 0}
