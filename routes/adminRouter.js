@@ -22,6 +22,7 @@ router.put(
 router.put(
   "/collection/:id",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
+  adminMiddleware,
   adminController.updateCollection
 );
 router.delete(
@@ -39,10 +40,22 @@ router.post(
 
 // Items
 router.post(
-  "/item/:id",
+  "/item",
   passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
   adminMiddleware,
   adminController.createItem
+);
+router.delete(
+  "/item/:id",
+  passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
+  adminMiddleware,
+  adminController.deleteItem
+);
+router.put(
+  "/item/:id",
+  passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
+  adminMiddleware,
+  adminController.updateItem
 );
 
 module.exports = router;

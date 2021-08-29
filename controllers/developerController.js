@@ -4,9 +4,9 @@ const { users } = require("../db");
 
 async function changeRights(id, from, to) {
   const user = await users.findOne({ where: { id } });
-  if (!user) throw new Error("No one is found");
+  if (!user) throw new Error("No one is found!");
   if (user.dataValues.id_right != from)
-    throw new Error("You can not change his rights");
+    throw new Error("You can not change his rights!");
   return await users.update({ id_right: to }, { where: { id } });
 }
 

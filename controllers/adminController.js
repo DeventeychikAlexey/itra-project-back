@@ -1,6 +1,6 @@
 const { utils } = require("../lib");
 const config = require("../config/config");
-const { collections, items } = require("../db");
+const { collections, items, itemsTags, tags } = require("../db");
 
 const adminController = {
   // Users
@@ -40,7 +40,7 @@ const adminController = {
       const result = await collections.update(body, {
         where: { id: params.id },
       });
-      if (!!!result[0]) throw new Error("Ничего не изменилось!");
+      if (!!!result[0]) throw new Error("Nothing has been changed!");
       res.status(200).send({ msg: result });
     } catch (error) {
       res.status(400).send({ msg: error.message });
@@ -55,18 +55,27 @@ const adminController = {
     }
   },
   // Items
-  async createItem({ body, params }, res) {
+  async createItem({ body }, res) {
     try {
-      const result = await items.create({
-        name: body.name,
-        id_collection: params.id,
-      });
-      const id = result.dataValues.id;
-      await utils.createFieldsInteger(id, body.fieldsNumber);
-      await utils.createFieldsText(id, body.fieldsText);
-      await utils.createFieldsString(id, body.fieldsString);
-      await utils.createFieldsDate(id, body.fieldsDate);
-      await utils.createFieldsBoolean(id, body.fieldsBoolean);
+      const result = await utils.createItem(body);
+      res.status(200).send({ msg: result });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
+
+  async deleteItem({ params }, res) {
+    try {
+      const result = await items.destroy({ where: { id: params.id } });
+      await utils.deleteUnusedTags();
+      res.status(200).send({ msg: result });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
+  async updateItem({ body, params }, res) {
+    try {
+      const result = await utils.updateItem(body, params);
       res.status(200).send({ msg: result });
     } catch (error) {
       res.status(400).send({ msg: error.message });
