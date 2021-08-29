@@ -32,6 +32,9 @@ module.exports = function (sequelize) {
       id_google: {
         type: Sequelize.TEXT,
       },
+      id_facebook: {
+        type: Sequelize.TEXT,
+      },
       blocked: {
         type: Sequelize.BOOLEAN,
         allowNull: false,

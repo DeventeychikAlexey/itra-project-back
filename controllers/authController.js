@@ -43,7 +43,7 @@ const authController = {
   },
   async login({ user }, res) {
     try {
-      if (user.blocked) throw new Error("User is blocked!");
+      if (user?.blocked) throw new Error("User is blocked!");
       const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
         expiresIn: "24h",
       });
@@ -52,10 +52,19 @@ const authController = {
       res.status(400).send({ msg: error.message });
     }
   },
+  async socialMediaLogin({ user }, res) {
+    try {
+      const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
+        expiresIn: "24h",
+      });
+      res.redirect(`http://localhost:8080/auth/${token}`);
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
   async auth({ user }, res) {
     try {
       const result = (await utils.findUsers({ id: user.id }))[0];
-      if (result.blocked) throw new Error("User is blocked!");
       res.status(200).send({ msg: result });
     } catch (error) {
       res.status(400).send({ msg: error.message });

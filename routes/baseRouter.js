@@ -16,7 +16,7 @@ router.get("/collection/items/:id", baseController.countCollectionItems);
 router.get("/items", baseController.getItems);
 router.get("/items/:collectionId", baseController.getCollectionItems);
 router.get("/item/likes/:id", baseController.countItemLikes);
-// router.get("/item/:id", baseController.getItems);
+router.get("/item/:id", baseController.getItem);
 
 // Tags
 router.get("/tags", baseController.getTags);
@@ -26,5 +26,9 @@ router.get("/topics", baseController.getTopics);
 
 // Images
 router.get("/image/:collectionId", baseController.downloadImage);
+
+// Comments
+router.get("/comment/item/:id", baseController.getItemComments);
+router.get("/comment/update/item/:id", baseController.getNewComment);
 
 module.exports = router;

@@ -15,6 +15,7 @@ module.exports = function (sequelize) {
       },
       value: {
         type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       id_item: {
         type: Sequelize.INTEGER,

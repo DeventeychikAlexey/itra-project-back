@@ -1,11 +1,11 @@
 const {
   tags,
   topics,
-  users,
-  rights,
+
   items,
   likesUsersItems,
 } = require("../db");
+const emitter = require("../config/emitter");
 
 const { utils } = require("../lib");
 
@@ -71,6 +71,16 @@ const baseController = {
   },
 
   // Items
+  async getItem({ params }, res) {
+    try {
+      const result = await utils.findItems({ id: params.id });
+      res.status(200).send({
+        msg: result[0],
+      });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
   async getItems({}, res) {
     try {
       const result = await utils.findItems();
@@ -136,6 +146,29 @@ const baseController = {
         result.fileBinary
       ).toString("base64")}`;
       res.status(200).send({ msg: image });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
+
+  // Comments
+  async getItemComments({ params }, res) {
+    try {
+      const result = await utils.getItemComments(params.id);
+      res.status(200).send({ msg: result });
+    } catch (error) {
+      res.status(400).send({ msg: error.message });
+    }
+  },
+
+  async getNewComment({ params }, res) {
+    try {
+      emitter.once("newComment", async (comment) => {
+        if (params.id === comment.id_item) {
+          const result = await utils.getItemComments(params.id);
+          res.status(200).send({ msg: result });
+        }
+      });
     } catch (error) {
       res.status(400).send({ msg: error.message });
     }
