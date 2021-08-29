@@ -40,7 +40,7 @@ const adminController = {
       const result = await collections.update(body, {
         where: { id: params.id },
       });
-      if (!!!result[0]) throw new Error("Ничего не изменилось!");
+      if (!!!result[0]) throw new Error("Nothing has been changed!");
       res.status(200).send({ msg: result });
     } catch (error) {
       res.status(400).send({ msg: error.message });

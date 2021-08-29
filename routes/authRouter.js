@@ -11,7 +11,7 @@ router.post(
 router.post("/register", authController.register);
 router.post(
   "/",
-  passport.authenticate("jwt", { session: false, failureRedirect: "/" }),
+  passport.authenticate("jwt", { session: false, failureRedirect: "/login" }),
   authController.auth
 );
 router.get(
@@ -27,7 +27,23 @@ router.get(
     session: false,
     failureRedirect: "/login",
   }),
-  authController.login
+  authController.socialMediaLogin
+);
+
+router.get(
+  "/facebook",
+  passport.authenticate("facebook", {
+    scope: "profile",
+    session: false,
+  })
+);
+router.get(
+  "/facebook/callback",
+  passport.authenticate("facebook", {
+    session: false,
+    failureRedirect: "/login",
+  }),
+  authController.socialMediaLogin
 );
 
 module.exports = router;

@@ -23,7 +23,7 @@ const userController = {
       const result = await collections.update(body, {
         where: { id: params.id, id_user: user.id },
       });
-      if (!!!result[0]) throw new Error("Ничего не изменилось!");
+      if (!!!result[0]) throw new Error("Nothing has been changed!");
       res.status(200).send({ msg: result });
     } catch (error) {
       res.status(400).send({ msg: error.message });
@@ -49,7 +49,7 @@ const userController = {
       const collection = await collections.findOne({
         where: { id: body.id_collection, id_user: user.id },
       });
-      if (!collection) throw new Error("Нет доступа к данной коллекции!");
+      if (!collection) throw new Error("It's not available!");
       const result = await utils.createItem(body);
       res.status(200).send({ msg: result });
     } catch (error) {
