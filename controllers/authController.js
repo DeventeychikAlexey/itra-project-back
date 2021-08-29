@@ -57,7 +57,7 @@ const authController = {
       const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, {
         expiresIn: "24h",
       });
-      res.redirect(`http://localhost:8080/auth/${token}`);
+      res.redirect(`/auth/${token}`);
     } catch (error) {
       res.status(400).send({ msg: error.message });
     }
