@@ -25,7 +25,7 @@ routes.forEach((route) => {
   app.use("/back" + route.path, route.router);
 });
 
-app.use(history());
+// app.use(history());
 app.use("/", serveStatic(path.join(__dirname, "/dist")));
 
 (async () => {
