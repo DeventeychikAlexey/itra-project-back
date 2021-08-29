@@ -15,18 +15,18 @@ const serveStatic = require("serve-static");
 const PORT = process.env.PORT || 3000;
 
 const app = express();
-app.use(passport.initialize());
+app.use(history());
+app.use("/", serveStatic(path.join(__dirname, "/dist")));
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(passport.initialize());
+
 routes.forEach((route) => {
   app.use("/back" + route.path, route.router);
 });
-
-// app.use(history());
-app.use("/", serveStatic(path.join(__dirname, "/dist")));
 
 (async () => {
   try {
