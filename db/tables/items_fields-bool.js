@@ -15,6 +15,7 @@ module.exports = function (sequelize) {
       },
       value: {
         type: Sequelize.BOOLEAN,
+        defaultValue: true,
       },
       id_item: {
         type: Sequelize.INTEGER,

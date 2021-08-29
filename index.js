@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(passport.initialize());
 
 routes.forEach((route) => {
-  app.use(route.path, route.router);
+  app.use("/back" + route.path, route.router);
 });
 
 (async () => {

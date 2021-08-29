@@ -55,7 +55,6 @@ const authController = {
   async auth({ user }, res) {
     try {
       const result = (await utils.findUsers({ id: user.id }))[0];
-      if (result.blocked) throw new Error("User is blocked!");
       res.status(200).send({ msg: result });
     } catch (error) {
       res.status(400).send({ msg: error.message });

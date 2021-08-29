@@ -47,6 +47,7 @@ const jwtVerifyCallback = async (jwtPayload, done) => {
   try {
     const user = await users.findOne({ where: { id: jwtPayload.id } });
     if (!user) return done(null, false);
+    if (user.blocked) throw new Error("Заблокирован");
     return done(null, user);
   } catch (err) {
     return done(err, false);
@@ -72,6 +73,7 @@ const googleVerifyCallback = async (
   try {
     if (!profile) return done(null, false);
     let user = await users.findOne({ where: { id_google: profile.id } });
+    if (user.blocked) throw new Error("Заблокирован");
     if (!user) {
       user = await users.create({
         id_google: profile.id,

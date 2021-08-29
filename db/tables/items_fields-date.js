@@ -15,6 +15,7 @@ module.exports = function (sequelize) {
       },
       value: {
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
       id_item: {
         type: Sequelize.INTEGER,

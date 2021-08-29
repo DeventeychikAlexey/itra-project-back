@@ -15,6 +15,7 @@ const storage = multerDbx(dbx, {
   },
   mute: true,
 });
+
 const upload = multer({ storage: storage });
 
 module.exports = { upload, dbx };

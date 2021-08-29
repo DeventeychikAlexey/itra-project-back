@@ -12,7 +12,12 @@ module.exports = function (sequelize) {
       },
       comment: {
         type: Sequelize.TEXT,
-        allowNull: false,
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
       },
       id_user: {
         type: Sequelize.INTEGER,
